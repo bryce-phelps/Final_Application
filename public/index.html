@@ -1,0 +1,831 @@
+<!-- public/views/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+
+   <title>Application</title>
+
+   <!-- CSS -->
+   <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="css/validate.css"> <!-- custom styles -->
+
+   <!-- JS -->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
+   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.3/ui-bootstrap-tpls.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-resource.min.js"></script>
+
+  <!-- ANGULAR CUSTOM -->
+  <script src="js/controllers/MainCtrl.js"></script>
+  <script src="js/services/MainService.js"></script>
+  <script src="js/appRoutes.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/controllers/Applicant_Controller.js"></script>
+</head>
+<body ng-app="ApplicationApp" ng-controller="tabSetUp" ng-init="setUp()">
+    <uib-accordion>
+        <uib-accordion-group is-open="heading1">
+          <uib-accordion-heading>
+              Basic Info <i class="pull-right glyphicon" ng-class="{'glyphicon glyphicon-remove text-danger' : basic.$invalid && submittedBasic, 'glyphicon glyphicon-ok text-success' : basic.$invalid == false && submittedBasic}"></i>
+          </uib-accordion-heading>
+            <div class="container">
+                <div class="row">
+                    <form action="/new" method="POST" name="basic" novalidate data-ng-submit="registerBasic(applicant)" class="form-horizontal">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">Date of Birth:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.BasicInfo.BirthDate" is-open="popup1.opened">
+                                        <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.LN.$invalid && submittedBasic}">
+                                <label for="LName" class="col-sm-3 control-label">* Last Name:</label>
+                                <div class="col-sm-9">
+                                    <input required type="text" name="LN" class="form-control" ng-model="applicant.BasicInfo.LastName">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.FN.$invalid && submittedBasic}">
+                                <label for="FName" class="col-sm-3 control-label">* First Name:</label>
+                                <div class="col-sm-9">
+                                    <input required name="FN" type="text" ng-model="applicant.BasicInfo.FirstName" class="form-control" size="25">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.ADD.$invalid && submittedBasic}">
+                                <label for="Address" class="col-sm-3 control-label">* Address:</label>
+                                <div class="col-sm-9">
+                                    <input required name="ADD" type="text" ng-model="applicant.BasicInfo.Address" class="form-control" id="Address" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="Apt" class="col-sm-3 control-label">Apt/Suite:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.BasicInfo.AppSuite" class="form-control" id="Apt" size="10">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.City.$invalid && submittedBasic}">
+                                <label for="City" class="col-sm-3 control-label">* City:</label>
+                                <div class="col-sm-9">
+                                    <input name="City" required type="text" ng-model="applicant.BasicInfo.City" class="form-control" id="City" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.State.$invalid && submittedBasic}">
+                                <label for="State" class="col-sm-3 control-label">* State:</label>
+                                <div class="col-sm-9">
+                                    <input name="State" required type="text" ng-model="applicant.BasicInfo.State" class="form-control" id="State">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.Zip.$invalid && submittedBasic}">
+                                <label for="MName" class="col-sm-3 control-label">* Zip:</label>
+                                <div class="col-sm-9">
+                                    <input name="Zip" required type="text" ng-model="applicant.BasicInfo.Zip" class="form-control" id="Zip">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="HowLongAt" class="col-sm-3 control-label">How long at current address?</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.BasicInfo.TimeAddress" class="form-control" id="HowLongAt">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.Tele.$invalid && submittedBasic}">
+                                <label for="tele" class="col-sm-3 control-label">* Telephone:</label>
+                                <div class="col-sm-9">
+                                    <input name="Tele" required placeholder="000-000-0000" type="text" ng-model="applicant.BasicInfo.Phone" class="form-control" id="tele">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : basic.Email.$invalid && submittedBasic}">
+                                <label for="email" class="col-sm-3 control-label">* Email:</label>
+                                <div class="col-sm-9">
+                                    <input name="Email" required type="email" ng-model="applicant.BasicInfo.Email" class="form-control" data-ng-class="{red : basic.applicant.LastName.$error.required}" id="Email">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : eightblank && submittedBasic}">
+                                <label class="col-sm-3 control-label">* Are you under 18?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="eighteen" value="yes" ng-model="applicant.LegalInfo.eighteen">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="eighteenno" value="no" ng-model="applicant.LegalInfo.eighteen">No</input>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div ng-show="applicant.LegalInfo.eighteen=='yes'" class="form-group" data-ng-class="{'has-error' : proofReq && submittedBasic}">
+                                <label class="col-sm-3 control-label">* If yes can you provide proof of your eligibility to work?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="proofofeight" value="yes" ng-model="applicant.LegalInfo.proofeight">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="proofofeightno" value="no" ng-model="applicant.LegalInfo.proofeight">No</input>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : legalblank && submittedBasic}">
+                                <label class="col-sm-3 control-label">* Are you currently authorized to work in the United States?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="legalWork" value="yes" ng-model="applicant.LegalInfo.legalforWork">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="legalWorkNo" value="no" ng-model="applicant.LegalInfo.legalforWork">No</input>
+                                    </label>
+                                    <p>(Proof of eligibility will be required if hired)</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="empRef" class="col-sm-3 control-label">Employee Referral?</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" ng-model="applicant.PositionInfo.Referral" id="empRef" size="30">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="PosAppFor" class="col-sm-3 control-label">Position applying for:</label>
+                                <div class="col-sm-9">
+                                    <input name="Position" type="text" class="form-control" ng-model="applicant.PositionInfo.Position" id="PosAppFor" size="45">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="Wage" class="col-sm-3 control-label">Desired Wage:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" ng-model="applicant.PositionInfo.Wage" id="Wage">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">When are you available to start?</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.PositionInfo.Start" is-open="popup2.opened">
+                                        <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="WeeklyHour" class="col-sm-3 control-label">How many hours can you work weekly?</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" ng-model="applicant.PositionInfo.Hours" id="Wage">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Employment type desired:</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="FullTime" value="Full-Time" ng-model="applicant.PositionInfo.employmenttype">Full-Time</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="PartTime" value="Part-Time" ng-model="applicant.PositionInfo.employmenttype">Part-Time</input>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Upload Resume (optional)</label>
+                                <div class="col-sm-9">
+                                    <span ng-click="resume()" class="btn btn-default btn-file">
+                              Browse <input onchange="angular.element(this).scope().filesChanged(this)" type="file" ng-model="applicant.PositionInfo.Resume"></input>
+                            </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="pull-right">
+                                    <button class="btn btn-primary" type='button' ng-click="taboneNext(basic, applicant)">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </uib-accordion-group>
+        <uib-accordion-group is-open="heading2" heading="Educational Background" >
+          <uib-accordion-heading>
+              Educational Background <i class="pull-right glyphicon" ng-class="{'glyphicon glyphicon-remove text-danger' : Education.$invalid && twoSubmitted, 'glyphicon glyphicon-ok text-success' : Education.$invalid == false && twoSubmitted }"></i>
+          </uib-accordion-heading>
+            <div class="container">
+                <div class="row">
+                    <form name="Education" class="form-horizontal" data-ng-submit="tabtwoNext(Education, applicant)">
+                        <!-- <div class="col-sm-12">
+                            <p align="center">If you submitted a resume on an earlier page do not fill this page out just click next at the bottom of the page.</p>
+                        </div> -->
+                        <br>
+                        <br>
+                        <div class="col-sm-6">
+                            <div class="form-group" data-ng-class="{'has-error' : Education.HSname.$invalid && twoSubmitted}">
+                                <label class="col-sm-3 control-label">* Name of High School:</label>
+                                <div class="col-sm-9">
+                                    <input required type="text" name="HSname" ng-model="applicant.EducationInfo.HSinfo.HSname" class="form-control" id="HS">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : Education.HSLoc.$invalid && twoSubmitted}">
+                                <label class="col-sm-3 control-label">* Location of High School:</label>
+                                <div class="col-sm-9">
+                                    <input required type="text" name="HSLoc" ng-model="applicant.EducationInfo.HSinfo.HSlocation" class="form-control" id="Location">
+                                </div>
+                            </div>
+                            <div class="form-group" data-ng-class="{'has-error' : Education.HScom.$invalid && twoSubmitted}">
+                                <label class="col-sm-3 control-label">* # of years complete:</label>
+                                <div class="col-sm-9">
+                                    <input required type="text" name="HScom" ng-model="applicant.EducationInfo.HSinfo.HScomplete" class="form-control" id="yearscomp">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Year of Graduation</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="GradYear" ng-model="applicant.EducationInfo.HSinfo.HSGrad" class="form-control" id="major">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Name of College:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.CLinfo.CLname" class="form-control" id="Col">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Location of College:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.CLinfo.CLlocation" class="form-control" id="ColLocation">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"># of years complete:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.CLinfo.CLcomplete" class="form-control" id="Colyearscomp">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Major/Degree</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.CLinfo.CLmajor" class="form-control" id="Colmajor">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Name of Business/Trade School:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.BUinfo.BUname" class="form-control" id="BusHS">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Location of Business/Trade School:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.BUinfo.BUlocation" class="form-control" id="BusLocation">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"># of years complete:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.BUinfo.BUcomplete" class="form-control" id="Busyearscomp">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Major/Degree</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.BUinfo.BUmajor" class="form-control" id="Busmajor">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Name of Professional School:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.Proinfo.Proname" class="form-control" id="ProHS">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Location of Professional School:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.Proinfo.Prolocation" class="form-control" id="ProLocation">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"># of years complete:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.Proinfo.Procomplete" class="form-control" id="Proyearscomp">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Major/Degree</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.EducationInfo.Proinfo.Promajor" class="form-control" id="Promajor">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <button class="btn pull-right btn-primary" type='button' ng-click="tabtwoNext(Education, applicant)">Next</button>
+                            <button class="btn pull-left btn-primary" type='button' ng-click="tabtwoPrev()">Previous</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </uib-accordion-group>
+        <uib-accordion-group is-open="heading3" heading="More Info">
+          <uib-accordion-heading>
+              More Info  <i class="pull-right glyphicon" ng-class="{'glyphicon glyphicon-remove text-danger' : moreInfo.$invalid && submittedMore, 'glyphicon glyphicon-ok text-success' : moreInfo.$invalid == false && submittedMore}"></i>
+          </uib-accordion-heading>
+            <div class="container">
+                <div class="row">
+                    <form name="moreInfo" novalidate data-ng-submit="tabthreeNext(applicant)" class="form-horizontal">
+                        <div class="col-sm-6">
+                            <div class="form-group" data-ng-class="{'has-error' : CrimeReq && submittedMore}">
+                                <label class="col-sm-3 control-label">* Have you ever been convicted of a felony?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="crimeyes" value="yes" ng-model="applicant.MoreInfo.crime">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="crimeno" value="no" ng-model="applicant.MoreInfo.crime">No</input>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-class="{'vis-hidden' : applicant.MoreInfo.crime!='yes'}" class="col-sm-6">
+                            <div class="form-group" data-ng-class="{'has-error' : ConvicReq && submittedMore}">
+                                <label for="convic" class="col-sm-3 control-label">If answered YES, please list felony(s)</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.MoreInfo.CrimeInfo" class="form-control" id="convic" size="40">
+                                </div>
+                            </div>
+                            <!--<div>
+                <button type='button' ng-click="register(applicant)">Submit</button>
+              </div>-->
+                        </div>
+                        <!--<pre>form = {{user | json}}</pre>-->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Have you ever been in the Armed Forces?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="pastMilitary" value="yes" ng-model="applicant.MoreInfo.MilitaryEver">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="pastMilitaryNo" value="no" ng-model="applicant.MoreInfo.MilitaryEver">No</input>
+                                    </label>
+                                </div>
+                            </div>
+                            <div ng-class="{'vis-hidden' : applicant.MoreInfo.MilitaryEver!='yes'}" class="form-group">
+                                <label class="col-sm-3 control-label">Are you currently a member in the Armed Forces?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="currentlyMilitary" value="yes" ng-model="applicant.MoreInfo.MilitaryCurrent">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="currentlyMilitaryNo" value="no" ng-model="applicant.MoreInfo.MilitaryCurrent">No</input>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div ng-class="{'vis-hidden' : applicant.MoreInfo.MilitaryEver!='yes'}" class="form-group">
+                                <label class="col-sm-3 control-label" for="MilSpec">Speciality</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.MoreInfo.Speciality" class="form-control" id="MilSpec" size="40">
+                                </div>
+                            </div>
+                            <div ng-class="{'vis-hidden' : applicant.MoreInfo.MilitaryEver!='yes'}" class="form-group">
+                                <label for="date" class="col-sm-3 control-label">Date Entered:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.MoreInfo.MilStart" is-open="popup3.opened">
+                                        <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open3()"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-class="{'vis-hidden' : applicant.MoreInfo.MilitaryCurrent!='no'}" class="form-group">
+                                <label for="date" class="col-sm-3 control-label">Discharge Date</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.MoreInfo.MilEnd" is-open="popup4.opened">
+                                        <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open4()"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group col-sm-6 pull-left" data-ng-class="{'has-error' : drugReq && submittedMore}">
+                                <label class="col-sm-3 control-label">* Are you agreeable to a drug test?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="drugtest" value="yes" ng-model="applicant.MoreInfo.drugTest">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="drugtestNO" value="no" ng-model="applicant.MoreInfo.drugTest">No</input>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div>
+                    <button type='button' ng-click="register(applicant)">Submit</button>
+                  </div>-->
+
+                        <!--<div>
+                <button type='button' ng-click="register(applicant)">Submit</button>
+              </div>-->
+
+                        <div class="col-sm-12">
+                            <button class="btn pull-right btn-primary" type='button' ng-click="tabthreeNext(moreInfo, applicant)">Next</button>
+                            <button class="btn pull-left btn-primary" type='button' ng-click="tabthreePrev()">Previous</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </uib-accordion-group>
+         <uib-accordion-group ng-show="!hasResume" is-open="heading4" heading="Work Experience">
+          <uib-accordion-heading>
+              Work Experience <i class="pull-right glyphicon" ng-class="{'glyphicon glyphicon-ok text-success' : fourSubmitted }"></i>
+          </uib-accordion-heading>
+            <div class="container">
+                <div class="row">
+                    <form class="form-horizontal">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="NameOfEmp1" class="col-sm-3 control-label">Name of Employer:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpName" class="form-control" id="Emp" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SupName" class="col-sm-3 control-label">Supervisor Name:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpSup" class="form-control" id="Sup" size="40">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="StreetNum" class="col-sm-3 control-label">Street Number:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpAdd" class="form-control" id="StreetNum" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SuiteE" class="col-sm-3 control-label">Suite/Apt:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpSuite" class="form-control" id="Suite/AptE" size="10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="CityE" class="col-sm-3 control-label">City:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpCity" class="form-control" id="CityE" size="30">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="CityE" class="col-sm-3 control-label">State</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpState" class="form-control" id="stateE" size="10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ZipE" class="col-sm-3 control-label">Zip:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpZip" class="form-control" id="ZipE">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="PhoneE" class="col-sm-3 control-label">Phone:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpPhone" class="form-control" id="PhoneE">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TitleE" class="col-sm-3 control-label">Job Title</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpJobTitle" class="form-control" id="TitleE" size="60">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">Employment Start Date:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.WorkInfo.Emp1.EmpStart" is-open="popup11.opened">
+                                        <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="open11()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">End Date:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.WorkInfo.Emp1.EmpEnd" is-open="popup12.opened">
+                                        <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="open12()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="StartSal" class="col-sm-3 control-label">Pay/Salary Start:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpStartSal" class="form-control" id="StartSal">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="EndSal" class="col-sm-3 control-label">Pay/Salary End:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp1.EmpEndSal" class="form-control" id="EndSal">
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="width: 100%; color: black; height: 3px; background-color:black;" />
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="NameOfEmp1" class="col-sm-3 control-label">Name of Employer:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2Name" class="form-control" id="Emp2" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SupName" class="col-sm-3 control-label">Supervisor Name:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2Sup" class="form-control" id="Sup2" size="40">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="StreetNum" class="col-sm-3 control-label">Street Number:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2Add" class="form-control" id="StreetNum2" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SuiteE" class="col-sm-3 control-label">Suite/Apt:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2Suite" class="form-control" id="Suite/AptE2" size="10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="CityE" class="col-sm-3 control-label">City:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2City" class="form-control" id="CityE2" size="30">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="CityE" class="col-sm-3 control-label">State</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2State" class="form-control" id="stateE2" size="10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ZipE" class="col-sm-3 control-label">Zip:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2Zip" class="form-control" id="ZipE2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="PhoneE" class="col-sm-3 control-label">Phone:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2Phone" class="form-control" id="PhoneE2">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TitleE" class="col-sm-3 control-label">Job Title</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2JobTitle" class="form-control" id="TitleE2" size="60">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">Employment Start Date:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.WorkInfo.Emp2.Emp2Start" is-open="popup13.opened">
+                                        <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="open13()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">End Date:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.WorkInfo.Emp2.Emp2End" is-open="popup14.opened">
+                                        <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="open14()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="StartSal" class="col-sm-3 control-label">Pay/Salary Start:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2StartSal" class="form-control" id="StartSal2">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="EndSal" class="col-sm-3 control-label">Pay/Salary End:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp2.Emp2EndSal" class="form-control" id="EndSal2">
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="width: 100%; color: black; height: 3px; background-color:black;" />
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="NameOfEmp1" class="col-sm-3 control-label">Name of Employer:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3Name" class="form-control" id="Emp3" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SupName" class="col-sm-3 control-label">Supervisor Name:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3Sup" class="form-control" id="Sup3" size="40">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="StreetNum" class="col-sm-3 control-label">Street Number:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3Add" class="form-control" id="StreetNum3" size="50">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SuiteE" class="col-sm-3 control-label">Suite/Apt:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3Suite" class="form-control" id="Suite/AptE3" size="10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="CityE" class="col-sm-3 control-label">City:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3City" class="form-control" id="CityE3" size="30">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="CityE" class="col-sm-3 control-label">State</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3State" class="form-control" id="stateE3" size="10">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ZipE" class="col-sm-3 control-label">Zip:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3Zip" class="form-control" id="ZipE3">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="PhoneE" class="col-sm-3 control-label">Phone:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3Phone" class="form-control" id="PhoneE3">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TitleE" class="col-sm-3 control-label">Job Title</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3JobTitle" class="form-control" id="TitleE3" size="60">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">Employment Start Date:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.WorkInfo.Emp3.Emp3Start" is-open="popup15.opened">
+                                        <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="open15()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">End Date:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.WorkInfo.Emp3.Emp3End" is-open="popup16.opened">
+                                        <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="open16()"><i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="StartSal" class="col-sm-3 control-label">Pay/Salary Start:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3StartSal" class="form-control" id="StartSal3">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="EndSal" class="col-sm-3 control-label">Pay/Salary End:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" ng-model="applicant.WorkInfo.Emp3.Emp3EndSal" class="form-control" id="EndSal3">
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="width: 100%; color: black; height: 3px; background-color:black;" />
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">May we contact your current employeer?</label>
+                                <div class="col-sm-9">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="contactyes" value="yes" ng-model="applicant.WorkInfo.contactEmp">Yes</input>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="contactno" value="no" ng-model="applicant.WorkInfo.contactEmp">No</input>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <button class="btn pull-right btn-primary" type='button' ng-click="tabfourNext(applicant)">Next</button>
+                            <button class="btn pull-left btn-primary" type='button' ng-click="tabfourPrev(applicant)">Previous</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </uib-accordion-group>
+        <uib-accordion-group is-open="heading5" heading="Final Info">
+          <uib-accordion-heading>
+              Final Info <i class="pull-right glyphicon" ng-class="{'glyphicon glyphicon-ok text-success' : finalInfo.$invalid == false && submitted, 'glyphicon glyphicon-remove text-danger' : finalInfo.$invalid && submitted }"></i>
+          </uib-accordion-heading>
+            <div class="container">
+                <div class="row">
+                    <form name="finalInfo" novalidate data-ng-submit="register(finalInfo.$valid)" class="form-horizontal">
+                        <div class="col-sm-12">
+                            <br>
+                            <h1 align="center">PLEASE READ CAREFULLY</h1>
+                            <br>
+                        </div>
+                        <hr style="width: 100%; color: black; height: 3px; background-color:black;" />
+                        <div class="col-sm-12">
+                            <p align="center">I hereby authorize the potential employer to contact, obtain, and verify the accuracy of information contained in this application from all previous employers, educational institutions, and references. I also hereby release
+                                from liability the potential employer and its representatives for seeking, gathering, and using such information to make employment decisions and all other persons or organizations for providing such information.</p>
+                            <p align="center">
+                                I understand that any misrepresentation or material omission by me on this application will be sufficient cause for cancellation of this application or immediate termination of employment if I am employed, whenever it may be discovered.
+                            </p>
+                            <p align="center">
+                                If I am employed, I acknowledge that there is no specified length of employment and that this application does not constitute an agreement or contract for employment. Accordingly, either I or the employer can terminate the relationship at will, with or
+                                without cause, at any time, so long as there is no violation of applicable federal or state law.
+                            </p>
+                        </div>
+                        <hr style="width: 100%; color: black; height: 3px; background-color:black;" />
+                        <div class="col-sm-12">
+                            <p align="center">
+                                We are an equal employment opportunity employer. We adhere to a policy of making employment decisions without regard to race, color, religion, gender, sexual orientation, national origin, citizenship, age, height, weight, disability, or any other legally
+                                protected status. We assure you that your opportunity for employment with us depends solely on your qualifications.
+                            </p>
+                            <p align="center">Thank you for completing this application form and for your interest in our business</p>
+                            <br>
+                            <br>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{'has-error' : finalInfo.AS.$invalid && submitted}">
+                                <label for="AppSig" class="col-sm-3 control-label">* Signature:</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="AS" class="form-control" ng-model="applicant.FinalInfo.Signature" required>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-class="{'has-error' : finalInfo.PN.$invalid && submitted}">
+                                <label for="AppPrint" class="col-sm-3 control-label">* Print Name:</label>
+                                <div class="col-sm-9">
+                                    <input required type="text" ng-model="applicant.FinalInfo.PrintName" class="form-control" name="PN">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="date" class="col-sm-3 control-label">Date:</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="applicant.FinalInfo.SignDate" is-open="popup5.opened">
+                                        <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="open5()"><i class="glyphicon glyphicon-calendar"></i></button>
+                              </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Notes/Extra Previous Employment</label>
+                                <div class="col-sm-9">
+                                    <textarea ng-model="applicant.FinalInfo.extraNotes" class="form-control" rows="6" placeholder="This box can be resized if needed."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <button class="btn pull-right btn-primary" type='button' ng-click="register(finalInfo, applicant)">Submit</button>
+                            <button class="btn pull-left btn-primary" type='button' ng-click="tabfivePrev()">Previous</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </uib-accordion-group>
+    </uib-accordion>
+    <div class="container">
+        <div ui-view></div>
+    </div>
+</body>
+</html>
