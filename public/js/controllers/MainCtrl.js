@@ -197,7 +197,7 @@ ApplicationApp.controller('tabSetUp', function($scope, $rootScope, $state, $reso
         console.log($scope.resume)
         //user.PositionInfo.Resume = $scope.resume
         //console.log(user.PositionInfo.Resume)
-        // console.log(user)
+        //console.log(user)
         $scope.submittedBasic = true;
         if (user.PositionInfo.employmenttype == "Part-Time") {
             $scope.Parttime = true;
@@ -250,7 +250,7 @@ ApplicationApp.controller('tabSetUp', function($scope, $rootScope, $state, $reso
         }
         //Code for US citizen check
         if (user.LegalInfo.legalforWork == undefined) {
-            user.LegalInfo.legalno == false;
+            user.LegalInfo.legalno = false;
             user.LegalInfo.legalyes = false;
         } else if (user.LegalInfo.legalforWork == "yes") {
             user.LegalInfo.legalyes = true;
